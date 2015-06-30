@@ -24,6 +24,8 @@ Results from listeners are then forwarded back to the original caller as line-de
 
 |Environment Variable||
 |:---|:---|
+|`POSTABLE_AUTH_USER`|Optional. A username for basic HTTP authentication to the service.|
+|`POSTABLE_AUTH_PASS`|Optional. A password for basic HTTP authentication to the service.|
 |`POSTABLE_REDIS_HOST`|Required. The redis host to use.|
 |`POSTABLE_REDIS_PORT`|Required. The redis port to connect to.|
 |`POSTABLE_REDIS_PASS`|Optional. The auth password for redis.|
