@@ -111,4 +111,4 @@ Return the last task submitted to the given bucket as JSON, or `null` if there w
 
 Postable works by using redis for pub/sub. See below for a high-level sequence diagram:
 
-<img alt="Sequence Diagram" src="https://github.com/aol/postable/raw/master/docs/img/sequence.png" width="550">
+<img alt="Sequence Diagram" src="https://github.com/aol/postable/raw/master/docs/img/sequence.png" width="650">
