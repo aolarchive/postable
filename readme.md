@@ -47,7 +47,7 @@ The connection **is never closed** by the service.
 
 Each task will contain an `id`, `time`, `listenerId`, and the `data` from the task.
 
-### Sending Tasks
+### Sending a Tasks
 
 ```
 POST /buckets/<bucket>/tasks/
@@ -67,10 +67,10 @@ Once all results have been received, the connection will close.
 If the timeout is reached the connection will close with additional entries for each timed out listener with a property `timeout` set to `true`.
 This timeout can be configured using `?timeout=<seconds>`.
 
-### Respond to Task
+### Responding to a Task
 
 ```
-POS /tasks/<taskId>/results/<listenerId>
+POST /tasks/<taskId>/results/<listenerId>
 {
   ... task result ...
 }
@@ -79,3 +79,15 @@ POS /tasks/<taskId>/results/<listenerId>
 To respond to a task from a listener, simply `POST /tasks/<taskId>/results/<listenerId>` with the task result as a JSON object.
  
 The `<taskId>` and `<listenerId>` should come from the initial task sent (see **Listening for Tasks**).
+
+### Getting the Last Task
+
+```
+GET /buckets/<bucket>/tasks/last
+{
+  ... task data ...
+}
+```
+
+Return the last task submitted to the given bucket as JSON, or `null` if there was none.
+ 
