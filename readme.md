@@ -29,7 +29,7 @@ Results from listeners are then forwarded back to the original caller as line-de
 |`POSTABLE_AUTH_PASS`|Optional (defaults to none). A password for basic HTTP authentication to the service.|
 |`POSTABLE_REDIS_HOST`|Optional (defaults to `127.0.0.1`). The redis host to use.|
 |`POSTABLE_REDIS_PORT`|Optional (defaults to `6379`). The redis port to connect to.|
-|`POSTABLE_REDIS_PASS`|Optional. The auth password for redis.|
+|`POSTABLE_REDIS_PASS`|Optional (defaults to none). The auth password for redis.|
 |`POSTABLE_LISTENER_SET_TIMEOUT_SECONDS`|Optional (defaults to `30`). How long to keep listener data in redis.|
 
 ## Usage
