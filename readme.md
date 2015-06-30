@@ -36,8 +36,13 @@ Results from listeners are then forwarded back to the original caller as line-de
 ```
 POST /listeners/
 {
-  "buckets": [ "bucket-1", "bucket-2", ... ]
+  "buckets": [ "bucket-1", "bucket-2", ... ],
+  
+  ... additional listener data ...
 }
+=> 200
+{ "id": <taskId>, "time": <unixTime>, "listenerId": <listenerId>, "data": <taskData> }
+...
 ```
 
 To listen for tasks on buckets, a client will `POST /listeners/` with a body containing the `buckets` to listen to (as an array of strings).
@@ -54,6 +59,10 @@ POST /buckets/<bucket>/tasks/
 {
   ... task data ...
 }
+=> 200
+{ "meta": { "listenersPending": [ ... ] } }
+{ "listener": { "buckets": [...], "id": <listenerId>, "started": <dateString>, ... }, "timeout": false, "data": <result> }
+...
 ```
 
 To send a task to a bucket, simply `POST /buckets/<bucket>/tasks/` with the task data as a JSON object.
@@ -74,6 +83,7 @@ POST /tasks/<taskId>/results/<listenerId>
 {
   ... task result ...
 }
+=> 200
 ```
 
 To respond to a task from a listener, simply `POST /tasks/<taskId>/results/<listenerId>` with the task result as a JSON object.
@@ -84,6 +94,7 @@ The `<taskId>` and `<listenerId>` should come from the initial task sent (see **
 
 ```
 GET /buckets/<bucket>/tasks/last
+=> 200
 {
   ... task data ...
 }
