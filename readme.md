@@ -47,7 +47,7 @@ The connection **is never closed** by the service.
 
 Each task will contain an `id`, `time`, `listenerId`, and the `data` from the task.
 
-### Sending a Tasks
+### Sending a Task
 
 ```
 POST /buckets/<bucket>/tasks/
