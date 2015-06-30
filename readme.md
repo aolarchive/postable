@@ -106,4 +106,9 @@ GET /buckets/<bucket>/tasks/last
 ```
 
 Return the last task submitted to the given bucket as JSON, or `null` if there was none.
- 
+
+## Implementation
+
+Postable works by using redis for pub/sub. See below for a high-level sequence diagram:
+
+[Sequence Diagram](https://github.com/aol/postable/raw/master/docs/img/sequence.png)
