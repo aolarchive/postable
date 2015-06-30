@@ -30,6 +30,7 @@ Results from listeners are then forwarded back to the original caller as line-de
 |`POSTABLE_REDIS_HOST`|Optional (defaults to `127.0.0.1`). The redis host to use.|
 |`POSTABLE_REDIS_PORT`|Optional (defaults to `6379`). The redis port to connect to.|
 |`POSTABLE_REDIS_PASS`|Optional (defaults to none). The auth password for redis.|
+|`POSTABLE_REDIS_PREFIX`|Optional (defaults to `postable_`). The prefix for redis keys and channels.|
 |`POSTABLE_LISTENER_SET_TIMEOUT_SECONDS`|Optional (defaults to `30`). How long to keep listener data in redis.|
 
 ## Usage
