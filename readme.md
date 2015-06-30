@@ -1,6 +1,6 @@
 # Postable
 
-A simple task distribution service.
+A simple task distribution and result collection service.
 
 Postable can receive tasks and distribute them to listeners.
 Results from listeners are then forwarded back to the original caller as line-delimited JSON.
