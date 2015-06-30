@@ -1,5 +1,5 @@
 {
-  "name": "postal",
+  "name": "postable",
   "private": true,
   "dependencies": {
     "basic-auth": "^1.0.2",
