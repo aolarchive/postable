@@ -48,7 +48,7 @@ POST /listeners/
   ... additional listener data ...
 }
 => 200
-{ "id": <taskId>, "time": <unixTime>, "listenerId": <listenerId>, "data": <taskData> }
+{ "id": <taskId>, "started": <dateString>, "listenerId": <listenerId>, "data": <taskData> }
 ...
 ```
 
@@ -57,7 +57,7 @@ To listen for tasks on buckets, a client will `POST /listeners/` with a body con
 This will be a **long-poll** request and as tasks come in they will be *streamed* to the client as *line-delimited JSON*. 
 The connection **is never closed** by the service.
 
-Each task will contain an `id`, `time`, `listenerId`, and the `data` from the task.
+Each task will contain an `id`, `started`, `listenerId`, and the `data` from the task.
 
 ### Sending a Task
 
