@@ -28,3 +28,54 @@ Results from listeners are then forwarded back to the original caller as line-de
 |`POSTABLE_REDIS_PORT`|Required. The redis port to connect to.|
 |`POSTABLE_REDIS_PASS`|Optional. The auth password for redis.|
 |`POSTABLE_LISTENER_SET_TIMEOUT_SECONDS`|Optional (defaults to `30`). How long to keep listener data in redis.|
+
+## Usage
+
+### Listening for Tasks
+
+```
+POST /listeners/
+{
+  "buckets": [ "bucket-1", "bucket-2", ... ]
+}
+```
+
+To listen for tasks on buckets, a client will `POST /listeners/` with a body containing the `buckets` to listen to (as an array of strings).
+
+This will be a **long-poll** request and as tasks come in they will be *streamed* to the client as *line-delimited JSON*. 
+The connection **is never closed** by the service.
+
+Each task will contain an `id`, `time`, `listenerId`, and the `data` from the task.
+
+### Sending Tasks
+
+```
+POST /buckets/<bucket>/tasks/
+{
+  ... task data ...
+}
+```
+
+To send a task to a bucket, simply `POST /buckets/<bucket>/tasks/` with the task data as a JSON object.
+
+The response will be a stream of *line-delimited JSON*. The first entry will be a meta entry containing `listenersPending` (an array of listener IDs).
+
+This task will be given a unique task ID and sent to all listeners. As listeners respond to the task with results, those results
+will be *streamed* back to this response. Each entry will contain the listener ID sending the result.
+Once all results have been received, the connection will close. 
+
+If the timeout is reached the connection will close with additional entries for each timed out listener with a property `timeout` set to `true`.
+This timeout can be configured using `?timeout=<seconds>`.
+
+### Respond to Task
+
+```
+POS /tasks/<taskId>/results/<listenerId>
+{
+  ... task result ...
+}
+```
+
+To respond to a task from a listener, simply `POST /tasks/<taskId>/results/<listenerId>` with the task result as a JSON object.
+ 
+The `<taskId>` and `<listenerId>` should come from the initial task sent (see **Listening for Tasks**).
