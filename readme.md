@@ -5,6 +5,8 @@ A simple task distribution and result collection service.
 Postable can receive tasks and distribute them to listeners.
 Results from listeners are then forwarded back to the original caller as line-delimited JSON.
 
+Postable can be clustered, but instances must share the same Redis master.
+
 ## Workflow
 
 1. Listeners connect to Postable specifying the *buckets* to listen to.
@@ -110,5 +112,7 @@ Return the last task submitted to the given bucket as JSON, or `null` if there w
 ## Implementation
 
 Postable works by using redis for pub/sub. See below for a high-level sequence diagram:
+
+In the diagram below, `Potable 1` and `Postable 2` can either be the same or different boxes in the same cluster.
 
 <img alt="Sequence Diagram" src="https://github.com/aol/postable/raw/master/docs/img/sequence.png" width="650">
