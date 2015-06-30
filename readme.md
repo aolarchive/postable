@@ -1,5 +1,7 @@
 # Postable
 
+<img alt="Postable Task Service" src="https://github.com/aol/postable/raw/master/docs/img/postable.png" height="200">
+
 A simple task distribution and result collection service.
 
 Postable can receive tasks and distribute them to listeners.
