@@ -1,6 +1,29 @@
 {
   "name": "postable",
   "private": true,
+  "version": "0.0.1",
+  "description": "A simple task distribution and result collection service.",
+  "keywords": [
+    "task",
+    "distributed",
+    "deploy",
+    "deployment"
+  ],
+  "author": "Ralph Khattar <ralph.khattar@gmail.com>",
+  "contributors": [],
+  "scripts": {
+    "test": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha ./test/lib/*"
+  },
+  "bin": {
+    "postable": "./lib/app.js"
+  },
+  "files": [
+    "lib/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/aol/postable.git"
+  },
   "dependencies": {
     "basic-auth": "^1.0.2",
     "body-parser": "^1.13.1",
@@ -12,6 +35,8 @@
     "winston": "^1.0.1"
   },
   "devDependencies": {
+    "coveralls": "^2.11.2",
+    "extend": "^2.0.1",
     "istanbul": "^0.3.17",
     "mocha": "^2.2.5",
     "ndjson": "^1.4.1",
