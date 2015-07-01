@@ -12,6 +12,8 @@
     "winston": "^1.0.1"
   },
   "devDependencies": {
+    "istanbul": "^0.3.17",
+    "mocha": "^2.2.5",
     "ndjson": "^1.4.1",
     "request": "^2.58.0"
   }
