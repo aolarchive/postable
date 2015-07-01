@@ -28,6 +28,7 @@
     "basic-auth": "^1.0.2",
     "body-parser": "^1.13.1",
     "debug": "^2.2.0",
+    "es6-collections": "^0.5.1",
     "express": "^4.13.0",
     "hiredis": "^0.4.0",
     "node-uuid": "^1.4.3",
