@@ -29,7 +29,7 @@ function setupEnv(env) {
 
 setupEnv();
 var nextPort = 3000;
-var redis = require('../lib/redis');
+var redis = require('../lib/redis')(require('../lib/log'));
 redis.flushdb();
 
 module.exports = function (env) {
