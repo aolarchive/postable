@@ -10,6 +10,14 @@ describe('endpoints/last', function () {
 		instance.start();
 
 		var task = { foo: 'bar' };
+		var waiting = 2;
+
+		instance.get('/buckets/ /tasks/last', {
+			response: function (res) {
+				assert(res.statusCode === 400);
+				--waiting || done();
+			}
+		});
 
 		instance.post('/buckets/foo/tasks/', task, {
 			response: function () {
@@ -21,7 +29,7 @@ describe('endpoints/last', function () {
 						assert(last.data);
 						assert.deepEqual(task, last.data);
 						instance.stop();
-						done();
+						--waiting || done();
 					}
 				});
 			}

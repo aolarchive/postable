@@ -177,4 +177,18 @@ describe('endpoints/{listen,start}', function () {
 
 	});
 
+	it('rejects empty results', function (done) {
+
+		var instance = setup();
+		instance.start();
+
+		// Hook up a listener.
+		instance.post('/tasks/ /results/bar', { }, {
+			response: function (res) {
+				assert(res.statusCode === 400);
+				done();
+			}
+		});
+	});
+
 });
