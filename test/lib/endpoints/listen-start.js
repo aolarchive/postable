@@ -173,6 +173,7 @@ describe('endpoints/{listen,start}', function () {
 						assert(pttl);
 						assert(+pttl > 500);
 						done();
+						instance.stop();
 					});
 				});
 			});
@@ -204,6 +205,7 @@ describe('endpoints/{listen,start}', function () {
 					redis.zrangebyscore(redisKeyBucketListeners, 0, Date.now(), function (e, replies) {
 						assert(replies.length === 0);
 						done();
+						instance.stop();
 					});
 				}, 100);
 			});
@@ -222,6 +224,7 @@ describe('endpoints/{listen,start}', function () {
 			response: function (res) {
 				assert(res.statusCode === 400);
 				done();
+				instance.stop();
 			}
 		});
 	});
@@ -233,7 +236,7 @@ describe('endpoints/{listen,start}', function () {
 		instance.start();
 		var items = [];
 
-		// Hook up a listener.
+		// Send a task with no listeners.
 		instance.post('/buckets/no-listeners/tasks/?timeout=10', { bar: 'baz' }, {
 			listener: function (item) {
 				items.push(item);
@@ -244,9 +247,54 @@ describe('endpoints/{listen,start}', function () {
 					assert(items.length === 1);
 					assert(items[0].meta);
 					done();
+					instance.stop();
 				}, 10);
 			}
 		});
+	});
+
+	it('handles edge case of pending set being empty on timeout', function (done) {
+
+		this.slow(4000);
+		this.timeout(4000);
+
+		var instance = setup();
+		instance.start();
+		var items = [];
+		var taskId;
+
+		// Hook up a listener that does not respond.
+		instance.post('/listeners/', { buckets: ['edgecase1'] }, {
+			listener: function (task) {
+				taskId = task.id;
+			}
+		});
+
+		setTimeout(function () {
+			// Send a task.
+			instance.post('/buckets/edgecase1/tasks/?timeout=1', { bar: 'baz' }, {
+				listener: function (item) {
+					items.push(item);
+				},
+				done: function () {
+					assert(items.length === 1);
+					assert(items[0].meta);
+					done();
+					instance.stop();
+				},
+				response: function (res) {
+					assert(res.statusCode === 200);
+				}
+			});
+
+			setTimeout(function () {
+				var redis = instance.server().app.redis;
+				var redisKeyPending = redis.key('pending', taskId);
+				redis.del(redisKeyPending);
+			}, 100);
+
+		}, 100);
+
 	});
 
 });
