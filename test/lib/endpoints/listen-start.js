@@ -28,6 +28,9 @@ describe('endpoints/{listen,start}', function () {
 			actual.responses = actual.responses.sort(function (a, b) {
 				return a.r.localeCompare(b.r);
 			});
+			actual.tasks = actual.tasks.sort(function (a, b) {
+				return a.b.localeCompare(b.b);
+			});
 			assert.deepEqual(expect, actual);
 			instance.stop();
 			done();
@@ -219,6 +222,29 @@ describe('endpoints/{listen,start}', function () {
 			response: function (res) {
 				assert(res.statusCode === 400);
 				done();
+			}
+		});
+	});
+
+
+	it('returns immediately with no listeners', function (done) {
+
+		var instance = setup();
+		instance.start();
+		var items = [];
+
+		// Hook up a listener.
+		instance.post('/buckets/no-listeners/tasks/?timeout=10', { bar: 'baz' }, {
+			listener: function (item) {
+				items.push(item);
+			},
+			response: function (res) {
+				setTimeout(function () {
+					assert(res.statusCode === 200);
+					assert(items.length === 1);
+					assert(items[0].meta);
+					done();
+				}, 10);
 			}
 		});
 	});
