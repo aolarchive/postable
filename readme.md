@@ -35,8 +35,9 @@ Postable can be clustered, but instances must share the same Redis master.
 |`POSTABLE_REDIS_PORT`|Optional (defaults to `6379`). The redis port to connect to.|
 |`POSTABLE_REDIS_PASS`|Optional (defaults to none). The auth password for redis.|
 |`POSTABLE_REDIS_PREFIX`|Optional (defaults to `postable_`). The prefix for redis keys and channels.|
-|`POSTABLE_LISTENER_TIMEOUT_SECONDS`|Optional (defaults to `1800`). How long to keep listener data in redis.|
-|`POSTABLE_LISTENER_SET_TIMEOUT_SECONDS`|Optional (defaults to `1800`). How long to keep listener set data in redis.|
+|`POSTABLE_LISTENER_TIMEOUT_SECONDS`|Optional (defaults to 30 mins, `1800`). How long to keep listener data in redis.|
+|`POSTABLE_LISTENER_SET_TIMEOUT_SECONDS`|Optional (defaults to 30 mins, `1800`). How long to keep listener set data in redis.|
+|`POSTABLE_LAST_TASK_TIMEOUT_SECONDS`|Optional (defaults to 7 days, `604800`). How long to keep the last task per bucket.|
 
 ## Usage
 

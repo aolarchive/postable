@@ -8,5 +8,9 @@
     "hiredis": "^0.4.0",
     "node-uuid": "^1.4.3",
     "redis": "^0.12.1"
+  },
+  "devDependencies": {
+    "ndjson": "^1.4.1",
+    "request": "^2.58.0"
   }
 }
