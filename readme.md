@@ -31,6 +31,8 @@ Postable can be clustered, but instances must share the same Redis master.
 |`POSTABLE_PORT`|Optional (defaults to `3000`). The port to listen on.|
 |`POSTABLE_AUTH_USER`|Optional (defaults to none). A username for basic HTTP authentication to the service.|
 |`POSTABLE_AUTH_PASS`|Optional (defaults to none). A password for basic HTTP authentication to the service.|
+|`POSTABLE_LOG_FILE`|Optional (defaults to console). Where to log data.|
+|`POSTABLE_LOG_LEVEL`|Optional (defaults to `info`). The minimum level to log.|
 |`POSTABLE_REDIS_HOST`|Optional (defaults to `127.0.0.1`). The redis host to use.|
 |`POSTABLE_REDIS_PORT`|Optional (defaults to `6379`). The redis port to connect to.|
 |`POSTABLE_REDIS_PASS`|Optional (defaults to none). The auth password for redis.|
