@@ -4,11 +4,14 @@ var extend = require('extend');
 var path = require('path');
 var fs = require('fs');
 var noop = function () { };
+var nextPort = 3000;
+
 
 module.exports = function (env) {
 
 	var server = null;
-	var base = 'http://localhost:3000';
+	var port = nextPort++;
+	var base = 'http://localhost:' + port;
 	var logFile = __dirname + '/test.out.log';
 
 	Object.keys(process.env).forEach(function (key) {
@@ -21,6 +24,7 @@ module.exports = function (env) {
 		process.env[key] = env[key];
 	});
 
+	process.env.POSTABLE_PORT = port;
 	process.env.POSTABLE_LOG_FILE = logFile;
 	process.env.POSTABLE_LOG_LEVEL = 'debug';
 	try {

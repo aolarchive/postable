@@ -5,6 +5,9 @@ describe('endpoints/{listen,start}', function () {
 
 	it('works', function (done) {
 
+		this.slow(1000);
+		this.timeout(2000);
+
 		var instance = setup();
 		instance.start();
 
@@ -72,6 +75,59 @@ describe('endpoints/{listen,start}', function () {
 						close.tasks.push(reason);
 					}
 				})
+			});
+		}, 5);
+
+	});
+
+
+	it('times out listeners', function (done) {
+
+		this.slow(3000);
+		this.timeout(2000);
+
+		var instance = setup();
+		instance.start();
+
+		// Hook up a listener to all buckets.
+		instance.post('/listeners/', { buckets: ['bt1'] }, {
+			listener: function (item) {
+				instance.post('/tasks/' + item.id + '/results/' + item.listenerId, { foo: 'bar' });
+			}
+		});
+		instance.post('/listeners/', { buckets: ['bt1'] }, {
+			listener: function (item) {
+				// Do nothing.
+			}
+		});
+		var responses = [];
+		// Put a task on each bucket.
+		setTimeout(function () {
+			instance.post('/buckets/bt1/tasks/?timeout=1', { bar: 'baz' }, {
+				listener: function (item) {
+					// Verify that responses coming from the listeners look correct.
+					assert(item);
+					if (item.meta) {
+						assert(item.meta.listenersPending && item.meta.listenersPending.length === 2);
+						return;
+					}
+					responses.push(item);
+				},
+				done: function (reason) {
+					assert(responses.length === 2);
+					responses.forEach(function (response) {
+						assert(response.listener);
+						assert(response.listener.id);
+						assert(response.listener.started);
+						assert.deepEqual(response.listener.buckets, ['bt1']);
+					});
+					assert(responses[0].timeout === false);
+					assert.deepEqual(responses[0].data, { foo: 'bar' });
+					assert(responses[1].timeout === true);
+					assert(responses[1].data === null);
+					done();
+					instance.stop();
+				}
 			});
 		}, 5);
 
