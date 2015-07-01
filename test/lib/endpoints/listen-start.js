@@ -16,7 +16,7 @@ describe('endpoints/{listen,start}', function () {
 		var close = { tasks: [], responses: [] };
 
 		var buckets = ['b1','b2','b3'];
-		var waiting = buckets.length * 2;
+		var waiting = 1 + (buckets.length * 2);
 		buckets.forEach(function (bucket) {
 			expect.tasks.push({ b: bucket });
 			expect.responses.push({ r: bucket });
@@ -32,6 +32,14 @@ describe('endpoints/{listen,start}', function () {
 			instance.stop();
 			done();
 		}
+
+		// Ensure no buckets results in 400.
+		instance.post('/listeners/', { bad: true }, {
+			response: function (res) {
+				assert(res.statusCode === 400);
+				--waiting || complete();
+			}
+		});
 
 		// Hook up a listener to all buckets.
 		instance.post('/listeners/', { buckets: buckets }, {
