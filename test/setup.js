@@ -71,6 +71,7 @@ module.exports = function (env) {
 		req.on('end', complete('end'));
 		req.on('close', complete('complete'));
 		req.on('error', complete('error'));
+		return req;
 	}
 
 	return {

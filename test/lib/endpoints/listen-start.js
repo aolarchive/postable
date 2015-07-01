@@ -177,6 +177,38 @@ describe('endpoints/{listen,start}', function () {
 
 	});
 
+
+	it('removes disconnected listeners', function (done) {
+
+		this.slow(4000);
+		this.timeout(5000);
+
+		var instance = setup();
+		instance.start();
+
+		// Hook up a listener.
+		var req = instance.post('/listeners/', { buckets: ['bd1'] });
+
+		// The listener should be extended in 500ms (half that of POSTABLE_LISTENER_TIMEOUT_SECONDS).
+		// Verify that is the case.
+		setTimeout(function () {
+			var redis = instance.server().app.redis;
+			var redisKeyBucketListeners = redis.key('listeners', 'bd1');
+			redis.zrangebyscore(redisKeyBucketListeners, 0, Date.now(), function (e, replies) {
+				assert(replies.length === 1);
+				req.abort();
+				setTimeout(function () {
+					redis.zrangebyscore(redisKeyBucketListeners, 0, Date.now(), function (e, replies) {
+						assert(replies.length === 0);
+						done();
+					});
+				}, 100);
+			});
+		}, 100);
+
+	});
+
+
 	it('rejects empty results', function (done) {
 
 		var instance = setup();
