@@ -109,7 +109,7 @@ describe('endpoints/{listen,start}', function () {
 			}
 		});
 		var responses = [];
-		// Put a task on each bucket.
+		// Put a task on the bucket.
 		setTimeout(function () {
 			instance.post('/buckets/bt1/tasks/?timeout=1', { bar: 'baz' }, {
 				listener: function (item) {
@@ -138,6 +138,42 @@ describe('endpoints/{listen,start}', function () {
 				}
 			});
 		}, 5);
+
+	});
+
+
+	it('periodically extends listeners', function (done) {
+
+		this.slow(4000);
+		this.timeout(5000);
+
+		var instance = setup({ POSTABLE_LISTENER_TIMEOUT_SECONDS: 1 });
+		instance.start();
+
+		// Hook up a listener.
+		instance.post('/listeners/', { buckets: ['be1'] });
+
+		// The listener should be extended in 500ms (half that of POSTABLE_LISTENER_TIMEOUT_SECONDS).
+		// Verify that is the case.
+		setTimeout(function () {
+			var redis = instance.server().app.redis;
+			var redisKeyBucketListeners = redis.key('listeners', 'be1');
+			redis.zrangebyscore(redisKeyBucketListeners, 0, Date.now(), function (e, replies) {
+				assert(replies.length === 1);
+				var redisKeyListener = redis.key('listener', replies[0]);
+				redis.get(redisKeyListener, function (e, listener) {
+					listener = JSON.parse(listener);
+					assert(listener.id);
+					assert(listener.buckets);
+					assert(listener.started);
+					redis.pttl(redisKeyListener, function (e, pttl) {
+						assert(pttl);
+						assert(+pttl > 500);
+						done();
+					});
+				});
+			});
+		}, 700);
 
 	});
 

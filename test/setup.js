@@ -5,7 +5,8 @@ var path = require('path');
 var fs = require('fs');
 var noop = function () { };
 var nextPort = 3000;
-
+var redis = require('../lib/redis');
+redis.flushdb();
 
 module.exports = function (env) {
 
@@ -72,8 +73,9 @@ module.exports = function (env) {
 		},
 		start: function () {
 			delete require.cache[path.resolve(__dirname + '/../lib/app.js')];
+			delete require.cache[path.resolve(__dirname + '/../lib/log.js')];
+			delete require.cache[path.resolve(__dirname + '/../lib/redis.js')];
 			server = require('../lib/app');
-			server.app.redis.flushdb();
 		},
 		stop: function () {
 			server && server.close();
