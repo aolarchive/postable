@@ -3,7 +3,31 @@ var ndjson = require('ndjson');
 var extend = require('extend');
 var path = require('path');
 var fs = require('fs');
+var recursive = require('recursive-readdir');
 var noop = function () { };
+
+var logFile = __dirname + '/test.out.log';
+try {
+	fs.unlinkSync(logFile);
+} catch (e) {
+
+}
+
+function setupEnv(env) {
+	env = env || { };
+	Object.keys(process.env).forEach(function (key) {
+		if (key.match(/^POSTABLE_/)) {
+			delete process.env[key];
+		}
+	});
+	Object.keys(env).forEach(function (key) {
+		process.env[key] = env[key];
+	});
+	process.env.POSTABLE_LOG_FILE = logFile;
+	process.env.POSTABLE_LOG_LEVEL = 'debug';
+}
+
+setupEnv();
 var nextPort = 3000;
 var redis = require('../lib/redis');
 redis.flushdb();
@@ -13,26 +37,8 @@ module.exports = function (env) {
 	var server = null;
 	var port = nextPort++;
 	var base = 'http://localhost:' + port;
-	var logFile = __dirname + '/test.out.log';
-
-	Object.keys(process.env).forEach(function (key) {
-		if (key.match(/^POSTABLE_/)) {
-			delete process.env[key];
-		}
-	});
 	env = env || { };
-	Object.keys(env).forEach(function (key) {
-		process.env[key] = env[key];
-	});
-
-	process.env.POSTABLE_PORT = port;
-	process.env.POSTABLE_LOG_FILE = logFile;
-	process.env.POSTABLE_LOG_LEVEL = 'debug';
-	try {
-		fs.unlinkSync(logFile);
-	} catch (e) {
-
-	}
+	env.POSTABLE_PORT = port;
 
 	function call(method, url, data, opt) {
 		opt = opt || { };
@@ -72,9 +78,13 @@ module.exports = function (env) {
 			return server;
 		},
 		start: function () {
-			delete require.cache[path.resolve(__dirname + '/../lib/app.js')];
-			delete require.cache[path.resolve(__dirname + '/../lib/log.js')];
-			delete require.cache[path.resolve(__dirname + '/../lib/redis.js')];
+			recursive(__dirname + '/../lib', function (err, files) {
+				files.forEach(function (file) {
+					var fullPath = path.resolve('' + file);
+					delete require.cache[fullPath];
+				});
+			});
+			setupEnv(env);
 			server = require('../lib/app');
 		},
 		stop: function () {
