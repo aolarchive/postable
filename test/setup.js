@@ -62,11 +62,11 @@ module.exports = function (env) {
 				}
 			}
 		}
-		if (response) {
+		if (response !== noop) {
 			req.on('response', response);
 		}
-		if (listener) {
-			req.pipe(ndjson.parse()).on('data', listener || noop);
+		if (listener !== noop) {
+			req.pipe(ndjson.parse()).on('data', listener);
 		}
 		req.on('end', complete('end'));
 		req.on('close', complete('complete'));

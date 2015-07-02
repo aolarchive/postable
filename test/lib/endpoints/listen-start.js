@@ -40,6 +40,7 @@ describe('endpoints/{listen,start}', function () {
 		instance.post('/listeners/', { bad: true }, {
 			response: function (res) {
 				assert(res.statusCode === 400);
+				assert(res.headers['x-postable-cluster-id']);
 				--waiting || complete();
 			}
 		});
