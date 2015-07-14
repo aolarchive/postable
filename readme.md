@@ -124,7 +124,7 @@ In the diagram below, `Potable 1` and `Postable 2` can either be the same or dif
 
 ## License
 
-Copyright (c) 2015 AOL Inc.
+Copyright &copy; 2015 AOL Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
