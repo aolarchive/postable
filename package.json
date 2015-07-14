@@ -2,6 +2,7 @@
   "name": "postable",
   "private": true,
   "version": "0.0.1",
+  "license": "MIT",
   "description": "A simple task distribution and result collection service.",
   "keywords": [
     "task",
