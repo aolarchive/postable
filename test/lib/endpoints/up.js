@@ -27,7 +27,7 @@ describe('endpoints/up', function () {
 			}
 		});
 
-		instance.get('/', {
+		instance.post('/buckets/foo/tasks/', { bar: 'baz' }, {
 			response: function (res) {
 				assert(res.statusCode);
 				assert(res.statusCode === 401);
