@@ -35,6 +35,15 @@ describe('endpoints/up', function () {
 			}
 		});
 
+		instance.post('/buckets/foo/tasks/', { bar: 'baz' }, {
+			options: { auth: { user: user, pass: pass } },
+			response: function (res) {
+				assert(res.statusCode);
+				assert(res.statusCode === 200);
+				--waiting || complete();
+			}
+		});
+
 	});
 
 });
