@@ -23,21 +23,22 @@ function setupEnv(env) {
 	Object.keys(env).forEach(function (key) {
 		process.env[key] = env[key];
 	});
+	process.env.POSTABLE_REDIS_PREFIX = 'pr' + (process.env.POSTABLE_PORT || 'X') + '_';
 	process.env.POSTABLE_LOG_FILE = logFile;
 	process.env.POSTABLE_LOG_LEVEL = 'debug';
 }
 
 setupEnv();
-var nextPort = 3000;
+var nextPort = 3500;
 var redis = require('../lib/redis')(require('../lib/log'));
 redis.flushdb();
 
 module.exports = function (env) {
 
 	var server = null;
-	var port = nextPort++;
-	var base = 'http://localhost:' + port;
 	env = env || { };
+	var port = env.POSTABLE_PORT || (nextPort++);
+	var base = 'http://localhost:' + port;
 	env.POSTABLE_PORT = port;
 
 	function call(method, url, data, opt) {
@@ -75,6 +76,7 @@ module.exports = function (env) {
 	}
 
 	return {
+		port: port,
 		server: function () {
 			return server;
 		},

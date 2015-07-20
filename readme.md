@@ -31,20 +31,47 @@ Postable can be clustered, but instances must share the same Redis master.
 
 ## Configuration
 
-|Environment Variable||
-|:---|:---|
-|`POSTABLE_PORT`|Optional (defaults to `3000`). The port to listen on.|
-|`POSTABLE_AUTH_USER`|Optional (defaults to none). A username for basic HTTP authentication to the service.|
-|`POSTABLE_AUTH_PASS`|Optional (defaults to none). A password for basic HTTP authentication to the service.|
-|`POSTABLE_LOG_FILE`|Optional (defaults to console). Where to log data.|
-|`POSTABLE_LOG_LEVEL`|Optional (defaults to `info`). The minimum level to log.|
-|`POSTABLE_REDIS_HOST`|Optional (defaults to `127.0.0.1`). The redis host to use.|
-|`POSTABLE_REDIS_PORT`|Optional (defaults to `6379`). The redis port to connect to.|
-|`POSTABLE_REDIS_PASS`|Optional (defaults to none). The auth password for redis.|
-|`POSTABLE_REDIS_PREFIX`|Optional (defaults to `postable_`). The prefix for redis keys and channels.|
-|`POSTABLE_LISTENER_TIMEOUT_SECONDS`|Optional (defaults to 30 mins, `1800`). How long to keep listener data in redis.|
-|`POSTABLE_LISTENER_SET_TIMEOUT_SECONDS`|Optional (defaults to 30 mins, `1800`). How long to keep listener set data in redis.|
-|`POSTABLE_LAST_TASK_TIMEOUT_SECONDS`|Optional (defaults to 7 days, `604800`). How long to keep the last task per bucket.|
+### Environment Variables
+
+- `POSTABLE_PORT`  
+  Optional (defaults to `3000`). The port to listen on.
+
+- `POSTABLE_BROADCAST`   
+  A semicolon-delimited set of base URIs of other postable services for task broadcasting (see **Task Broadcasting** below).  
+  Example: `http://foo.example.com;http://bar.example.com;http://baz.example.com`
+
+- `POSTABLE_AUTH_USER`   
+  Optional (defaults to none). A username for basic HTTP authentication to the service.
+
+- `POSTABLE_AUTH_PASS`  
+  Optional (defaults to none). A password for basic HTTP authentication to the service.
+
+- `POSTABLE_LOG_FILE`  
+  Optional (defaults to console). Where to log data.
+
+- `POSTABLE_LOG_LEVEL`
+  Optional (defaults to `info`). The minimum level to log.
+
+- `POSTABLE_REDIS_HOST`  
+  Optional (defaults to `127.0.0.1`). The redis host to use.
+
+- `POSTABLE_REDIS_PORT`  
+  Optional (defaults to `6379`). The redis port to connect to.
+
+- `POSTABLE_REDIS_PASS`  
+  Optional (defaults to none). The auth password for redis.
+
+- `POSTABLE_REDIS_PREFIX`  
+  Optional (defaults to `postable_`). The prefix for redis keys and channels.
+
+- `POSTABLE_LISTENER_TIMEOUT_SECONDS`  
+  Optional (defaults to 30 mins, `1800`). How long to keep listener data in redis.
+
+- `POSTABLE_LISTENER_SET_TIMEOUT_SECONDS`  
+  Optional (defaults to 30 mins, `1800`). How long to keep listener set data in redis.
+
+- `POSTABLE_LAST_TASK_TIMEOUT_SECONDS`  
+  Optional (defaults to 7 days, `604800`). How long to keep the last task per bucket.
 
 ## Usage
 
@@ -92,6 +119,28 @@ Once all results have been received, the connection will close.
 
 If the timeout is reached the connection will close with additional entries for each timed out listener with a property `timeout` set to `true`.
 This timeout can be configured using `?timeout=<seconds>`.
+
+### Task Broadcasting
+
+A task can be broadcast across data-centers using by calling the broadcast endpoint. 
+Postable must be configured to use this feature (see the `POSTABLE_BROADCAST` option under **Configuration**).
+
+This endpoint is similar to **Sending a Task**, but begins with `/broadcast/`:
+
+```
+POST /broadcast/buckets/<bucket>/tasks/
+{
+  ... task data ...
+}
+=> 200
+{ "clusterId": "a...", "meta": { "listenersPending": [ ... ] } }
+{ "clusterId": "a...", "listener": { "buckets": [...], "id": <listenerId>, "started": <dateString>, ... }, "timeout": false, "data": <result> }
+{ "clusterId": "b...", "meta": { "listenersPending": [ ... ] } }
+...
+```
+
+The response will be a stream of *line-delimited JSON*. Results from various clusters will be streamed back.
+One meta item containing `listenersPending` will be sent from *each cluster*.
 
 ### Responding to a Task
 

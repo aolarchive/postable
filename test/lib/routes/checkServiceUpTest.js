@@ -1,7 +1,7 @@
 var setup = require('../../setup');
 var assert = require('assert');
 
-describe('endpoints/up', function () {
+describe('routes/checkServiceUp', function () {
 
 	it('works', function (done) {
 
@@ -11,7 +11,7 @@ describe('endpoints/up', function () {
 		var instance = setup({ POSTABLE_AUTH_USER: user, POSTABLE_AUTH_PASS: pass });
 		instance.start();
 
-		var waiting = 2;
+		var waiting = 3;
 
 		function complete() {
 			instance.stop();

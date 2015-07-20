@@ -1,3 +1,4 @@
+var setup = require('../setup');
 var json = require('../../lib/json');
 var assert = require('assert');
 

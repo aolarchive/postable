@@ -1,7 +1,7 @@
 var setup = require('../../setup');
 var assert = require('assert');
 
-describe('endpoints/{listen,start}', function () {
+describe('routes/{clusterListenForTasks,clusterStartTask}', function () {
 
 	it('works', function (done) {
 

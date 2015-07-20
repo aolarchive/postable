@@ -1,6 +1,6 @@
 {
   "name": "postable",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "license": "MIT",
   "description": "A simple task distribution and result collection service.",
   "keywords": [
@@ -31,8 +31,10 @@
     "es6-collections": "^0.5.1",
     "express": "^4.13.0",
     "hiredis": "^0.4.0",
+    "ndjson": "^1.4.1",
     "node-uuid": "^1.4.3",
     "redis": "^0.12.1",
+    "request": "^2.59.0",
     "winston": "^1.0.1"
   },
   "devDependencies": {

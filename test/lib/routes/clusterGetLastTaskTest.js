@@ -1,7 +1,7 @@
 var setup = require('../../setup');
 var assert = require('assert');
 
-describe('endpoints/last', function () {
+describe('routes/clusterGetLastTask', function () {
 
 	it('works', function (done) {
 
