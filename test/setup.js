@@ -81,12 +81,7 @@ module.exports = function (env) {
 			return server;
 		},
 		start: function () {
-			recursive(__dirname + '/../lib', function (err, files) {
-				files.forEach(function (file) {
-					var fullPath = path.resolve('' + file);
-					delete require.cache[fullPath];
-				});
-			});
+			clearRequireCache();
 			setupEnv(env);
 			server = require('../lib/app');
 		},
@@ -101,3 +96,14 @@ module.exports = function (env) {
 		}
 	};
 };
+
+function clearRequireCache() {
+	recursive(__dirname + '/../lib', function (err, files) {
+		files.forEach(function (file) {
+			var fullPath = path.resolve('' + file);
+			delete require.cache[fullPath];
+		});
+	});
+}
+
+module.exports.clearRequireCache = clearRequireCache;
