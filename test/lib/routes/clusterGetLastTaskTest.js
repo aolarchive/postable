@@ -23,6 +23,7 @@ describe('routes/clusterGetLastTask', function () {
 			response: function () {
 				instance.get('/buckets/foo/tasks/last', {
 					listener: function (last) {
+						if (last.ignoreHeartbeat) return;
 						assert(last);
 						assert(last.id);
 						assert(last.started);

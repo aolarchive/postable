@@ -26,6 +26,7 @@ function setupEnv(env) {
 	process.env.POSTABLE_REDIS_PREFIX = 'pr' + (process.env.POSTABLE_PORT || 'X') + '_';
 	process.env.POSTABLE_LOG_FILE = logFile;
 	process.env.POSTABLE_LOG_LEVEL = 'debug';
+	process.env.POSTABLE_HEARTBEAT_MILLIS = 10;
 }
 
 setupEnv();

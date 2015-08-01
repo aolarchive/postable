@@ -49,6 +49,7 @@ describe('routes/broadcastStartTask', function () {
 				instance.post('/listeners/', { buckets: ['foo'] }, {
 					options: { auth: { user: user, pass: pass } },
 					listener: function (item) {
+						if (item.ignoreHeartbeat) return;
 						// Verify the messages coming to the listener are correct.
 						assert(item);
 						assert(item.data);
@@ -77,6 +78,7 @@ describe('routes/broadcastStartTask', function () {
 				instances[0].post('/broadcast/buckets/foo/tasks/?timeout=2', task, {
 					options: { auth: { user: user, pass: pass } },
 					listener: function (item) {
+						if (item.ignoreHeartbeat) return;
 						if (item && item.meta) {
 							if (item.meta.broadcastClusters) {
 								assert(item.meta.broadcastClusters === 2);
@@ -152,6 +154,7 @@ describe('routes/broadcastStartTask', function () {
 			// Hook up a listener to both instances.
 			instance.post('/listeners/', { buckets: ['foo'] }, {
 				listener: function (item) {
+					if (item.ignoreHeartbeat) return;
 					// Verify the messages coming to the listener are correct.
 					assert(item);
 					assert(item.data);
@@ -176,6 +179,7 @@ describe('routes/broadcastStartTask', function () {
 				var waitingPorts = new Set(ports);
 				instance.post('/broadcast/buckets/foo/tasks/?timeout=2', task, {
 					listener: function (item) {
+						if (item.ignoreHeartbeat) return;
 						if (item && item.meta) {
 							if (item.meta.broadcastClusters) {
 								assert(item.meta.broadcastClusters === 2);

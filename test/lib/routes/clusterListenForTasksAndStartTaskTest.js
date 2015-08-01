@@ -48,6 +48,7 @@ describe('routes/{clusterListenForTasks,clusterStartTask}', function () {
 		// Hook up a listener to all buckets.
 		instance.post('/listeners/', { buckets: buckets }, {
 			listener: function (item) {
+				if (item.ignoreHeartbeat) return;
 				// Verify the messages coming to the listener are correct.
 				assert(item);
 				assert(item.id);
@@ -69,6 +70,7 @@ describe('routes/{clusterListenForTasks,clusterStartTask}', function () {
 			expect.tasks.forEach(function (t, i) {
 				instance.post('/buckets/' + t.b + '/tasks/', { task: t, index: i }, {
 					listener: function (item) {
+						if (item.ignoreHeartbeat) return;
 						// Verify that responses coming from the listeners look correct.
 						assert(item);
 						if (item.meta) {
@@ -104,6 +106,7 @@ describe('routes/{clusterListenForTasks,clusterStartTask}', function () {
 		// Hook up a listener to all buckets.
 		instance.post('/listeners/', { buckets: ['bt1'] }, {
 			listener: function (item) {
+				if (item.ignoreHeartbeat) return;
 				instance.post('/tasks/' + item.id + '/results/' + item.listenerId, { foo: 'bar' });
 			}
 		});
@@ -117,6 +120,7 @@ describe('routes/{clusterListenForTasks,clusterStartTask}', function () {
 		setTimeout(function () {
 			instance.post('/buckets/bt1/tasks/?timeout=1', { bar: 'baz' }, {
 				listener: function (item) {
+					if (item.ignoreHeartbeat) return;
 					// Verify that responses coming from the listeners look correct.
 					assert(item);
 					if (item.meta) {
@@ -240,6 +244,7 @@ describe('routes/{clusterListenForTasks,clusterStartTask}', function () {
 		// Send a task with no listeners.
 		instance.post('/buckets/no-listeners/tasks/?timeout=10', { bar: 'baz' }, {
 			listener: function (item) {
+				if (item.ignoreHeartbeat) return;
 				items.push(item);
 			},
 			response: function (res) {
@@ -267,6 +272,7 @@ describe('routes/{clusterListenForTasks,clusterStartTask}', function () {
 		// Hook up a listener that does not respond.
 		instance.post('/listeners/', { buckets: ['edgecase1'] }, {
 			listener: function (task) {
+				if (task.ignoreHeartbeat) return;
 				taskId = task.id;
 			}
 		});
@@ -275,6 +281,7 @@ describe('routes/{clusterListenForTasks,clusterStartTask}', function () {
 			// Send a task.
 			instance.post('/buckets/edgecase1/tasks/?timeout=1', { bar: 'baz' }, {
 				listener: function (item) {
+					if (item.ignoreHeartbeat) return;
 					items.push(item);
 				},
 				done: function () {

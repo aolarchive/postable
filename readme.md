@@ -36,11 +36,11 @@ Postable can be clustered, but instances must share the same Redis master.
 - `POSTABLE_PORT`  
   Optional (defaults to `3000`). The port to listen on.
 
-- `POSTABLE_BROADCAST`   
+- `POSTABLE_BROADCAST` 
   A semicolon-delimited set of base URIs of other postable services for task broadcasting (see **Task Broadcasting** below).  
   Example: `http://foo.example.com;http://bar.example.com;http://baz.example.com`
 
-- `POSTABLE_AUTH_USER`   
+- `POSTABLE_AUTH_USER`  
   Optional (defaults to none). A username for basic HTTP authentication to the service.
 
 - `POSTABLE_AUTH_PASS`  
@@ -49,7 +49,7 @@ Postable can be clustered, but instances must share the same Redis master.
 - `POSTABLE_LOG_FILE`  
   Optional (defaults to console). Where to log data.
 
-- `POSTABLE_LOG_LEVEL`
+- `POSTABLE_LOG_LEVEL`  
   Optional (defaults to `info`). The minimum level to log.
 
 - `POSTABLE_REDIS_HOST`  
@@ -63,6 +63,9 @@ Postable can be clustered, but instances must share the same Redis master.
 
 - `POSTABLE_REDIS_PREFIX`  
   Optional (defaults to `postable_`). The prefix for redis keys and channels.
+
+- `POSTABLE_HEARTBEAT_MILLIS`  
+  Optional (defaults to 5 seconds, `5000`). How often to send a heartbeat message so client connections don't close.
 
 - `POSTABLE_LISTENER_TIMEOUT_SECONDS`  
   Optional (defaults to 30 mins, `1800`). How long to keep listener data in redis.
