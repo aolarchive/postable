@@ -36,7 +36,7 @@ Postable can be clustered, but instances must share the same Redis master.
 - `POSTABLE_PORT`  
   Optional (defaults to `3000`). The port to listen on.
 
-- `POSTABLE_BROADCAST` 
+- `POSTABLE_BROADCAST`  
   A semicolon-delimited set of base URIs of other postable services for task broadcasting (see **Task Broadcasting** below).  
   Example: `http://foo.example.com;http://bar.example.com;http://baz.example.com`
 
