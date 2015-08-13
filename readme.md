@@ -68,7 +68,7 @@ Postable can be clustered, but instances must share the same Redis master.
   Optional (defaults to 5 seconds, `5000`). How often to send a heartbeat message so client connections don't close.
 
 - `POSTABLE_LISTENER_TIMEOUT_SECONDS`  
-  Optional (defaults to 30 mins, `1800`). How long to keep listener data in redis.
+  Optional (defaults to 20 seconds, `20`). How long to keep listener data in redis without an active client connection.
 
 - `POSTABLE_LISTENER_SET_TIMEOUT_SECONDS`  
   Optional (defaults to 30 mins, `1800`). How long to keep listener set data in redis.
