@@ -80,7 +80,7 @@ Postable can be clustered, but instances must share the same Redis master.
 
 ### Listening for Tasks
 
-```
+```js
 POST /listeners/
 {
   "buckets": [ "bucket-1", "bucket-2", ... ],
@@ -101,7 +101,7 @@ Each task will contain an `id`, `started`, `listenerId`, and the `data` from the
 
 ### Sending a Task
 
-```
+```js
 POST /buckets/<bucket>/tasks/
 {
   ... task data ...
@@ -130,7 +130,7 @@ Postable must be configured to use this feature (see the `POSTABLE_BROADCAST` op
 
 This endpoint is similar to **Sending a Task**, but begins with `/broadcast/`:
 
-```
+```js
 POST /broadcast/buckets/<bucket>/tasks/
 {
   ... task data ...
@@ -147,7 +147,7 @@ One meta item containing `listenersPending` will be sent from *each cluster*.
 
 ### Responding to a Task
 
-```
+```js
 POST /tasks/<taskId>/results/<listenerId>
 {
   ... task result ...
@@ -161,7 +161,7 @@ The `<taskId>` and `<listenerId>` should come from the initial task sent (see **
 
 ### Getting the Last Task
 
-```
+```js
 GET /buckets/<bucket>/tasks/last
 => 200
 {
