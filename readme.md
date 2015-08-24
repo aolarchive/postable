@@ -130,7 +130,7 @@ This timeout can be configured using `?timeout=<seconds>`.
 |Option||
 |:---|:---|
 |`timeout`|Query-string value. Defaults to `30`. Specify the listener timeout (in seconds)|
-|`max`|Query-string value. Defaults to no maximum. Specify the maximum number of listeners (per cluster) to receive the task.|
+|`max`|Query-string value. Defaults to no maximum. Specify the maximum number of listeners to receive the task.|
 
 ### Task Broadcasting
 
@@ -159,7 +159,7 @@ One meta item containing `listenersPending` will be sent from *each cluster*.
 |Option||
 |:---|:---|
 |`timeout`|Same as the above *Task Send* option; forwarded to each cluster.|
-|`max`|Same as the above *Task Send* option; forwarded to each cluster. That means each cluster will send the task to the number of listeners specified by `?max`.|
+|`max`|Same as the above *Task Send* option; forwarded to each cluster. Specifies the maximum number of listeners (per cluster) to receive the task. That means each cluster will send the task to the number of listeners specified by `?max`.|
 |`cluster`|Defaults to nothing. Only clusters with the ID specified will respond. This can also be an array (`?cluster[0]=<id>&cluster[1]=<id>&...`).|
 
 ### Responding to a Task
