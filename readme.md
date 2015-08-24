@@ -120,8 +120,17 @@ This task will be given a unique task ID and sent to all listeners. As listeners
 will be *streamed* back to this response. Each entry will contain the listener ID sending the result.
 Once all results have been received, the connection will close. 
 
+#### Timeout
+
 If the timeout is reached the connection will close with additional entries for each timed out listener with a property `timeout` set to `true`.
 This timeout can be configured using `?timeout=<seconds>`.
+
+#### Task Send Options
+
+|Option||
+|:---|:---|
+|`timeout`|Query-string value. Defaults to `30`. Specify the listener timeout (in seconds)|
+|`max`|Query-string value. Defaults to no maximum. Specify the maximum number of listeners (per cluster) to receive the task.|
 
 ### Task Broadcasting
 
@@ -144,6 +153,14 @@ POST /broadcast/buckets/<bucket>/tasks/
 
 The response will be a stream of *line-delimited JSON*. Results from various clusters will be streamed back.
 One meta item containing `listenersPending` will be sent from *each cluster*.
+
+#### Task Broadcasting Options
+
+|Option||
+|:---|:---|
+|`timeout`|Same as the above *Task Send* option; forwarded to each cluster.|
+|`max`|Same as the above *Task Send* option; forwarded to each cluster. That means each cluster will send the task to the number of listeners specified by `?max`.|
+|`cluster`|Defaults to nothing. Only clusters with the ID specified will respond. This can also be an array (`?cluster[0]=<id>&cluster[1]=<id>&...`).|
 
 ### Responding to a Task
 
