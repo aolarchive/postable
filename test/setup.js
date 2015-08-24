@@ -6,6 +6,8 @@ var fs = require('fs');
 var recursive = require('recursive-readdir');
 var noop = function () { };
 
+process.setMaxListeners(0);
+
 var logFile = __dirname + '/test.out.log';
 try {
 	fs.unlinkSync(logFile);
@@ -59,7 +61,7 @@ module.exports = function (env) {
 				if (alive) {
 					alive = false;
 					if (done) {
-						done(state);
+						done(state, arguments);
 					}
 				}
 			}
@@ -78,6 +80,7 @@ module.exports = function (env) {
 
 	return {
 		port: port,
+		clusterId: require('../lib/clusterId')(redis),
 		server: function () {
 			return server;
 		},

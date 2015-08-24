@@ -4,10 +4,7 @@ var express = require('express');
 
 describe('routes/broadcastStartTask', function () {
 
-	it('works', function (done) {
-
-		this.timeout(5000);
-		this.slow(5000);
+	describe('basics', function () {
 
 		var ports = [3010,3011];
 		var user = 'br0@dc@5t';
@@ -15,34 +12,64 @@ describe('routes/broadcastStartTask', function () {
 		var uris = ports.map(function (port) { return 'http://127.0.0.1:' + port; }).join(';');
 		var instances = [];
 		var instancePorts = ports.slice();
-		function nextInstance() {
-			var port = instancePorts.shift();
-			if (port) {
-				var instance = setup({
-					POSTABLE_AUTH_USER: user, POSTABLE_AUTH_PASS: pass,
-					POSTABLE_PORT: port, POSTABLE_BROADCAST: uris
-				});
-				instance.start();
-				instances.push(instance);
-				setTimeout(nextInstance, 100);
-			} else {
-				setTimeout(startTest, 200);
+		var tests = [];
+		var setupStarted = false;
+
+		function setupBasicsTest() {
+			if (!setupStarted) {
+				setupStarted = true;
+				nextInstance();
+				function nextInstance() {
+					var port = instancePorts.shift();
+					if (port) {
+						var instance = setup({
+							POSTABLE_AUTH_USER: user, POSTABLE_AUTH_PASS: pass,
+							POSTABLE_PORT: port, POSTABLE_BROADCAST: uris
+						});
+						instance.start();
+						instances.push(instance);
+						setTimeout(nextInstance, 100);
+					} else {
+						setTimeout(function () {
+							tests.forEach(function (starter) {
+								starter();
+							});
+							tests = null;
+						}, 200);
+					}
+				}
 			}
 		}
-		nextInstance();
 
-		function startTest() {
+		function waitForSetup(callback) {
+			return function (done) {
+				setupBasicsTest();
+				var me = this;
+				var args = arguments;
+				tests === null ? callback.apply(me, args) : tests.push(function () { callback.apply(me, args); });
+			};
+		}
+
+		function complete() {
+			if (--totalTests <= 0) {
+				instances.forEach(function (instance) {
+					instance.stop();
+				});
+				return true;
+			}
+			return false;
+		}
+
+		var totalTests = 3;
+
+		it('works', waitForSetup(function (done) {
+
+			this.timeout(5000);
+			this.slow(5000);
 
 			var task = { bar: 'baz', baz: Date.now() };
 			var closed = [];
 			var waiting = instances.length * 2;
-
-			function complete() {
-				instances.forEach(function (instance) {
-					instance.stop();
-				});
-				done();
-			}
 
 			// Hook up a listener to both instances.
 			instances.forEach(function (instance) {
@@ -64,7 +91,7 @@ describe('routes/broadcastStartTask', function () {
 						instance.post('/tasks/' + item.id + '/results/' + item.listenerId, response, {
 							options: { auth: { user: user, pass: pass } }
 						});
-						--waiting || complete();
+						--waiting || complete(done());
 					},
 					done: function (reason) {
 						closed.push(reason);
@@ -96,13 +123,78 @@ describe('routes/broadcastStartTask', function () {
 							assert(item.data.instancePort);
 							assert(waitingPorts.has(item.data.instancePort));
 							waitingPorts.delete(item.data.instancePort);
-							--waiting || complete();
+							--waiting || complete(done());
 						}
 					}
 				});
 			}, 100);
+		}));
 
-		}
+		it('respects ?max option', waitForSetup(function (done) {
+
+			this.timeout(5000);
+			this.slow(5000);
+
+			var tasksReceived = [];
+			[0, 1].forEach(function (instanceNumber) {
+				var listenersPerInstance = 3;
+				for (var i = 0; i < listenersPerInstance; i++) {
+					instances[instanceNumber].post('/listeners/', {buckets: ['mt']}, {
+						options: {auth: {user: user, pass: pass}},
+						listener: function (item) {
+							if (item && !item.ignoreHeartbeat) {
+								tasksReceived.push(item);
+							}
+						}
+					});
+				}
+			});
+			setTimeout(function() {
+				var url = '/broadcast/buckets/mt/tasks/?timeout=1&max=1';
+				instances[0].post(url, {ct:'a'}, {
+					options: { auth: { user: user, pass: pass } },
+					listener: function (item) {
+						if ('undefined' !== typeof item.broadcastClusters) {
+							assert(item.broadcastClusters === 2);
+						}
+						if ('undefined' !== typeof item.listenersPending) {
+							assert(item.listenersPending === 2);
+						}
+					},
+					done: function () {
+						assert(tasksReceived.length === 2);
+						complete(done());
+					}
+				});
+			}, 100);
+
+		}));
+
+		it('respects ?cluster option', waitForSetup(function (done) {
+
+			this.timeout(5000);
+			this.slow(5000);
+
+			instances[1].clusterId(function (clusterId) {
+				setTimeout(function() {
+					var url = '/broadcast/buckets/ct/tasks/?timeout=2&cluster=' + clusterId;
+					instances[0].post(url, {ct:'a'}, {
+						options: { auth: { user: user, pass: pass } },
+						listener: function (item) {
+							if ('undefined' !== typeof item.broadcastClusters) {
+								assert(item.broadcastClusters === 1);
+							}
+							if ('undefined' !== typeof item.clusterId) {
+								assert(item.clusterId === clusterId);
+							}
+						},
+						done: function () { complete(done()); }
+					});
+				}, 100);
+			});
+
+		}));
+
 	});
 
 	it('handles status code errors', function (done) {
