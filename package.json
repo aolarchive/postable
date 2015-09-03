@@ -36,7 +36,8 @@
     "node-uuid": "^1.4.3",
     "redis": "^0.12.1",
     "request": "^2.59.0",
-    "winston": "^1.0.1"
+    "winston": "^1.0.1",
+    "winston-context": "0.0.7"
   },
   "devDependencies": {
     "coveralls": "^2.11.2",
