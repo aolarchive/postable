@@ -145,7 +145,7 @@ describe('routes/{clusterListenForTasks,clusterStartTask}', function () {
 					instance.stop();
 				}
 			});
-		}, 5);
+		}, 1000);
 
 	});
 
@@ -182,7 +182,7 @@ describe('routes/{clusterListenForTasks,clusterStartTask}', function () {
 					});
 				});
 			});
-		}, 700);
+		}, 1000);
 
 	});
 
