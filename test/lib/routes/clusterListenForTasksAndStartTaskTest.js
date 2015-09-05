@@ -97,8 +97,8 @@ describe('routes/{clusterListenForTasks,clusterStartTask}', function () {
 
 	it('times out listeners', function (done) {
 
-		this.slow(3000);
-		this.timeout(2000);
+		this.slow(5000);
+		this.timeout(5000);
 
 		var instance = setup();
 		instance.start();
