@@ -188,6 +188,22 @@ GET /buckets/<bucket>/tasks/last
 
 Return the last task submitted to the given bucket as JSON, or `null` if there was none.
 
+### Getting Bucket Listeners
+
+```js
+GET /buckets/<bucket>/listeners/
+=> 200
+{
+  [
+    { ... listener 1 info ... },
+    { ... listener 2 info ... },
+    ...
+  ]
+}
+```
+
+Return the last task submitted to the given bucket as JSON, or `null` if there was none.
+
 ## Implementation
 
 Postable works by using redis for pub/sub. See below for a high-level sequence diagram:
