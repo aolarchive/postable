@@ -1,6 +1,6 @@
 {
   "name": "postable",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "license": "MIT",
   "description": "A simple task distribution and result collection service.",
   "keywords": [
