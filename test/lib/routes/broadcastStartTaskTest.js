@@ -166,7 +166,7 @@ describe('routes/broadcastStartTask', function () {
 						complete(done());
 					}
 				});
-			}, 100);
+			}, 200);
 
 		}));
 
