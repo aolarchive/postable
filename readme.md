@@ -42,80 +42,81 @@ Postable can be clustered, but instances must share the same Redis master.
 ### Environment Variables (Server)
 
 - `POSTABLE_PORT`  
-  Optional (defaults to `3000`). The port to listen on.
+  *Optional* (defaults to `3000`). The port to listen on.
 
 - `POSTABLE_BROADCAST`  
-  A semicolon-delimited set of base URIs of other postable services for task broadcasting (see **Task Broadcasting** below).  
+  *Optional* (defaults to none).
+  A semicolon-delimited set of base URIs of other postable services for task broadcasting (see **Task Broadcasting** below).    
   Example: `http://foo.example.com;http://bar.example.com;http://baz.example.com`
 
 - `POSTABLE_REDIS_HOST`  
-  Optional (defaults to `127.0.0.1`). The redis host to use.
+  *Optional* (defaults to `127.0.0.1`). The redis host to use.
 
 - `POSTABLE_REDIS_PORT`  
-  Optional (defaults to `6379`). The redis port to connect to.
+  *Optional* (defaults to `6379`). The redis port to connect to.
 
 - `POSTABLE_REDIS_PASS`  
-  Optional (defaults to none). The auth password for redis.
+  *Optional* (defaults to none). The auth password for redis.
 
 - `POSTABLE_REDIS_PREFIX`  
-  Optional (defaults to `postable_`). The prefix for redis keys and channels.
+  *Optional* (defaults to `postable_`). The prefix for redis keys and channels.
 
 - `POSTABLE_HEARTBEAT_MILLIS`  
-  Optional (defaults to 5 seconds, `5000`). How often to send a heartbeat message so client connections don't close.
+  *Optional* (defaults to 5 seconds, `5000`). How often to send a heartbeat message so client connections don't close.
 
 - `POSTABLE_LISTENER_TIMEOUT_SECONDS`  
-  Optional (defaults to 20 seconds, `20`). How long to keep listener data in redis without an active client connection.
+  *Optional* (defaults to 20 seconds, `20`). How long to keep listener data in redis without an active client connection.
 
 - `POSTABLE_LISTENER_SET_TIMEOUT_SECONDS`  
-  Optional (defaults to 30 mins, `1800`). How long to keep listener set data in redis.
+  *Optional* (defaults to 30 mins, `1800`). How long to keep listener set data in redis.
 
 - `POSTABLE_LAST_TASK_TIMEOUT_SECONDS`  
-  Optional (defaults to 7 days, `604800`). How long to keep the last task per bucket.
+  *Optional* (defaults to 7 days, `604800`). How long to keep the last task per bucket.
 
 ### Environment Variables (Server and Listener)
 
-- `POSTABLE_LOG_FILE`
-  Optional (defaults to console). Where to log data.
+- `POSTABLE_LOG_FILE`  
+  *Optional* (defaults to console). Where to log data.
 
-- `POSTABLE_LOG_LEVEL`
-  Optional (defaults to `info`). The minimum level to log.
+- `POSTABLE_LOG_LEVEL`  
+  *Optional* (defaults to `info`). The minimum level to log.
 
-- `POSTABLE_AUTH_USER`
-  Optional (defaults to none). A username for basic HTTP authentication to the service.
+- `POSTABLE_AUTH_USER`  
+  *Optional* (defaults to none). A username for basic HTTP authentication to the service.
 
-- `POSTABLE_AUTH_PASS`
-  Optional (defaults to none). A password for basic HTTP authentication to the service.
+- `POSTABLE_AUTH_PASS`  
+  *Optional* (defaults to none). A password for basic HTTP authentication to the service.
 
 ### Environment Variables (Listener)
 
-- `POSTABLE_LISTEN_BASE_URL`
-  *Required*. The base URL for the Postable service.
+- `POSTABLE_LISTEN_BASE_URL`  
+  **Required**. The base URL for the Postable service.
 
-- `POSTABLE_LISTEN_BUCKETS_HTTP_URL`
-  *Required*. A URL to get the listener buckets from. The buckets will be refreshed periodically.
+- `POSTABLE_LISTEN_BUCKETS_HTTP_URL`  
+  **Required**. A URL to get the listener buckets from. The buckets will be refreshed periodically.
 
-- `POSTABLE_LISTEN_FORWARD_HTTP_URL`
-  *Required*. A URL to forward the task to. Will forward as a JSON body:
+- `POSTABLE_LISTEN_FORWARD_HTTP_URL`  
+  **Required**. A URL to forward the task to. Will forward as a JSON body:
   ```js
   {
     "task":  { /* task data */ }
   }
   ```
 
-- `POSTABLE_LISTEN_RECONNECT_RATE`
-  *Optional*. How soon to reconnect to postable in the case of an error. Defaults to 5 seconds.
+- `POSTABLE_LISTEN_RECONNECT_RATE`  
+  *Optional* (defaults to 5 seconds, `5`). How soon to reconnect to postable in the case of an error.
 
-- `POSTABLE_LISTEN_BUCKETS_REFRESH_RATE`
-  *Optional*. How often to refresh buckets. Defaults to 1 minute.
+- `POSTABLE_LISTEN_BUCKETS_REFRESH_RATE`  
+  *Optional* (defaults to 1 minute, `60`). How often to refresh buckets.
   
-- `POSTABLE_LISTEN_BUCKETS_RECONNECT_RATE`
-  *Optional*. How soon to reattempt to get buckets in the case of an error. Defaults to 5 seconds.
+- `POSTABLE_LISTEN_BUCKETS_RECONNECT_RATE`  
+  *Optional* (defaults to 5 seconds, `5`). How soon to reattempt to get buckets in the case of an error.
   
-- `POSTABLE_LISTEN_FORWARD_ATTEMPTS`
-  *Optional*. How many times to attempt forwarding the data to the HTTP URL. Defaults to 2.
+- `POSTABLE_LISTEN_FORWARD_ATTEMPTS`  
+  *Optional* (defaults to `2`). How many times to attempt forwarding the data to the HTTP URL.
 
-- `POSTABLE_LISTEN_LISTENER_DATA`
-  *Optional* Listener data (as JSON) to send to Postable. Defaults to an empty object.
+- `POSTABLE_LISTEN_LISTENER_DATA`  
+  *Optional* (defaults to an empty object). Listener data (as JSON) to send to Postable.
 
 ## Usage
 
