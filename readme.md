@@ -24,14 +24,22 @@ Postable can be clustered, but instances must share the same Redis master.
 
 ## Installation
 
+### Server Installation
+
 - Install Redis
 - Install Postable `npm install postable`
 - Set configuration as environment variables
 - Run service `bin/postable`
 
+### Listener Installation
+
+- Install Postable `npm install postable`
+- Set configuration as environment variables
+- Run client `bin/postable-listener`
+
 ## Configuration
 
-### Environment Variables
+### Environment Variables (Server)
 
 - `POSTABLE_PORT`  
   Optional (defaults to `3000`). The port to listen on.
@@ -39,18 +47,6 @@ Postable can be clustered, but instances must share the same Redis master.
 - `POSTABLE_BROADCAST`  
   A semicolon-delimited set of base URIs of other postable services for task broadcasting (see **Task Broadcasting** below).  
   Example: `http://foo.example.com;http://bar.example.com;http://baz.example.com`
-
-- `POSTABLE_AUTH_USER`  
-  Optional (defaults to none). A username for basic HTTP authentication to the service.
-
-- `POSTABLE_AUTH_PASS`  
-  Optional (defaults to none). A password for basic HTTP authentication to the service.
-
-- `POSTABLE_LOG_FILE`  
-  Optional (defaults to console). Where to log data.
-
-- `POSTABLE_LOG_LEVEL`  
-  Optional (defaults to `info`). The minimum level to log.
 
 - `POSTABLE_REDIS_HOST`  
   Optional (defaults to `127.0.0.1`). The redis host to use.
@@ -75,6 +71,51 @@ Postable can be clustered, but instances must share the same Redis master.
 
 - `POSTABLE_LAST_TASK_TIMEOUT_SECONDS`  
   Optional (defaults to 7 days, `604800`). How long to keep the last task per bucket.
+
+### Environment Variables (Server and Listener)
+
+- `POSTABLE_LOG_FILE`
+  Optional (defaults to console). Where to log data.
+
+- `POSTABLE_LOG_LEVEL`
+  Optional (defaults to `info`). The minimum level to log.
+
+- `POSTABLE_AUTH_USER`
+  Optional (defaults to none). A username for basic HTTP authentication to the service.
+
+- `POSTABLE_AUTH_PASS`
+  Optional (defaults to none). A password for basic HTTP authentication to the service.
+
+### Environment Variables (Listener)
+
+- `POSTABLE_LISTEN_BASE_URL`
+  *Required*. The base URL for the Postable service.
+
+- `POSTABLE_LISTEN_BUCKETS_HTTP_URL`
+  *Required*. A URL to get the listener buckets from. The buckets will be refreshed periodically.
+
+- `POSTABLE_LISTEN_FORWARD_HTTP_URL`
+  *Required*. A URL to forward the task to. Will forward as a JSON body:
+  ```js
+  {
+    "task":  { /* task data */ }
+  }
+  ```
+
+- `POSTABLE_LISTEN_RECONNECT_RATE`
+  *Optional*. How soon to reconnect to postable in the case of an error. Defaults to 5 seconds.
+
+- `POSTABLE_LISTEN_BUCKETS_REFRESH_RATE`
+  *Optional*. How often to refresh buckets. Defaults to 1 minute.
+  
+- `POSTABLE_LISTEN_BUCKETS_RECONNECT_RATE`
+  *Optional*. How soon to reattempt to get buckets in the case of an error. Defaults to 5 seconds.
+  
+- `POSTABLE_LISTEN_FORWARD_ATTEMPTS`
+  *Optional*. How many times to attempt forwarding the data to the HTTP URL. Defaults to 2.
+
+- `POSTABLE_LISTEN_LISTENER_DATA`
+  *Optional* Listener data (as JSON) to send to Postable. Defaults to an empty object.
 
 ## Usage
 

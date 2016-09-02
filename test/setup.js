@@ -5,6 +5,7 @@ var path = require('path');
 var fs = require('fs');
 var recursive = require('recursive-readdir');
 var noop = function () { };
+var nextPort = require('./nextPort');
 
 process.setMaxListeners(0);
 
@@ -32,7 +33,6 @@ function setupEnv(env) {
 }
 
 setupEnv();
-var nextPort = 3500;
 var redis = require('../lib/redis')(require('../lib/log'));
 redis.flushdb();
 
@@ -40,7 +40,7 @@ module.exports = function (env) {
 
 	var server = null;
 	env = env || { };
-	var port = env.POSTABLE_PORT || (nextPort++);
+	var port = env.POSTABLE_PORT || nextPort();
 	var base = 'http://localhost:' + port;
 	env.POSTABLE_PORT = port;
 

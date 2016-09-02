@@ -3,8 +3,6 @@ var setup = require('../setup');
 var redis = require('../../lib/redis')(require('../../lib/log'));
 var clusterId = require('../../lib/clusterId')(redis);
 
-console.log(setup);
-
 describe('clusterId', function () {
 
 	it('works', function (done) {
