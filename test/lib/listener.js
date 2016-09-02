@@ -201,7 +201,7 @@ describe('listener', function () {
 			}
 
 			function beginListening() {
-				let listenerStarted;
+				var listenerStarted;
 				startListener(options, function (listener) {
 					listenerStarted = listener;
 				});
@@ -279,7 +279,7 @@ describe('listener', function () {
 			}
 
 			function beginListening() {
-				let listenerStarted;
+				var listenerStarted;
 				startListener(options, function (listener) {
 					listenerStarted = listener;
 				});
