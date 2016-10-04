@@ -103,6 +103,9 @@ Postable can be clustered, but instances must share the same Redis master.
   }
   ```
 
+- `POSTABLE_MAX_CONCURRENT_FORWARDS`  
+  *Optional* (defaults to `50`). The max number of concurrent task forwards to send to the forward URL.
+
 - `POSTABLE_LISTEN_RECONNECT_RATE`  
   *Optional* (defaults to 5 seconds, `5`). How soon to reconnect to postable in the case of an error.
 
