@@ -3,7 +3,7 @@ var express = require('express');
 var assert = require('assert');
 var bodyParser = require('body-parser');
 var path = require('path');
-var uuid = require('node-uuid');
+var uuid = require('uuid');
 var extend = require('extend');
 var nextPort = require('../nextPort');
 
